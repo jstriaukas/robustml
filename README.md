@@ -1,2 +1,3 @@
 # robustml
-Robust-to-outliers machine learning methods
+
+Julia package for robust-to-outliers machine learning methods. 
