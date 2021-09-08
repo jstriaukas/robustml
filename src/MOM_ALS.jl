@@ -179,7 +179,7 @@ function pg_mom_als(X, y, beta_0, tau, K, max_iter, lam, epsil, is_random)
 			gamma = 1 / LL;
 			w = w_prev - gamma * f_grad(Xk, yk, w_prev, tau);
 			w = soft_threshold(w, lam * gamma);
-			delta = obj(Xk, yk, w, lam, tau) - obj_val - transpose(f_grad(Xk, yk, w_prev, tau)) * (w - w_prev) - (LL / 2) * norm(w-w_prev, 2) ^ 2;
+			delta = obj(Xk, yk, w, lam, tau) - obj_val - transpose(Array(f_grad(Xk, yk, w_prev, tau))) * (w - w_prev) - (LL / 2) * norm(w-w_prev, 2) ^ 2;
 			LL = LL * beta;
 		end
 		LL_prime = 1.0;
@@ -193,18 +193,18 @@ function pg_mom_als(X, y, beta_0, tau, K, max_iter, lam, epsil, is_random)
 			gamma = 1 / LL_prime;
 			w_prime = w_prime_prev - gamma * f_grad(Xk, yk, w_prime_prev, tau);
 			w_prime = soft_threshold(w_prime, lam * gamma);
-			delta_prime = obj(Xk, yk, w_prime, lam, tau) - obj_val - transpose(f_grad(Xk, yk, w_prime_prev, tau)) * (w_prime - w_prime_prev) - (LL_prime / 2) * norm(w_prime - w_prime_prev, 2) ^ 2;
+			delta_prime = obj(Xk, yk, w_prime, lam, tau) - obj_val - transpose(Array(f_grad(Xk, yk, w_prime_prev, tau))) * (w_prime - w_prime_prev) - (LL_prime / 2) * norm(w_prime - w_prime_prev, 2) ^ 2;
 			LL_prime = LL_prime * beta;
 		end
 		tmp_obj_prev = tmp_obj;
 		tmp_obj = mom_obj(X, y, w, w_prime, lam, tau);
 		mom_obj_pg_als[Int(counter)+1] = tmp_obj;
-		if (abs_val(tmp_obj) <= epsil)
-			if (abs_val(tmp_obj) + abs_val(tmp_obj_prev) <= 2 * epsil)
-				stopping = true;
-				counter = counter + 1.0;
-			end
-		end
+		#if (abs_val(tmp_obj) <= epsil)
+		#	if (abs_val(tmp_obj) + abs_val(tmp_obj_prev) <= 2 * epsil)
+		#		stopping = true;
+		#		counter = counter + 1.0;
+		#	end
+		#end
 	end
 	out = Dict("fitted_values" => mom_obj_pg_als, "beta" => w, "beta_prime" => w_prime, "counter" => counter, "stopping" => stopping);
 	return out
@@ -235,7 +235,7 @@ function pg_mom_als_w(X, y, beta_0, tau, K, max_iter, lam, epsil, is_random)
 			gamma = 1 / LL;
 			w = w_prev - gamma * f_grad(Xk, yk, w_prev, tau);
 			w = soft_threshold(w, lam * gamma);
-			delta = obj(Xk, yk, w, lam, tau) - obj_val - transpose(f_grad(Xk, yk, w_prev, tau))*(w - w_prev)-(LL/2)* norm(w-w_prev, 2) ^ 2;
+			delta = obj(Xk, yk, w, lam, tau) - obj_val - transpose(Array(f_grad(Xk, yk, w_prev, tau)))*(w - w_prev)-(LL/2)* norm(w-w_prev, 2) ^ 2;
 			LL = LL*beta;
 		end
 		LL_prime = 1.0;
@@ -249,7 +249,7 @@ function pg_mom_als_w(X, y, beta_0, tau, K, max_iter, lam, epsil, is_random)
 			gamma = 1 / LL_prime;
 			w_prime = w_prime_prev - gamma * f_grad(Xk, yk, w_prime_prev, tau);
 			w_prime = soft_threshold(w_prime, lam * gamma);
-			delta_prime = obj(Xk, yk, w_prime, lam, tau) - obj_val - transpose(f_grad(Xk, yk, w_prime_prev, tau))*(w_prime - w_prime_prev)-(LL_prime/2)*norm(w_prime - w_prime_prev, 2) ^ 2;
+			delta_prime = obj(Xk, yk, w_prime, lam, tau) - obj_val - transpose(Array(f_grad(Xk, yk, w_prime_prev, tau)))*(w_prime - w_prime_prev)-(LL_prime/2)*norm(w_prime - w_prime_prev, 2) ^ 2;
 			LL_prime = LL_prime*beta;
 		end
 		tmp_obj_prev = tmp_obj;
